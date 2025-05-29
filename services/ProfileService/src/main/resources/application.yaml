@@ -1,0 +1,71 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: profile-service
+  datasource:
+    url: jdbc:mysql://localhost:3308/profile_service?createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/hotel
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      group-id: profile-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+keycloak:
+  client:
+    id: hotel
+    secret: GAS78sfMPlWoHNs8y6aBwH3TJWjRWMzB
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+identity-service:
+  url: http://localhost:8180
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  logs:
+    level:
+      org.springframework.web: INFO
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0

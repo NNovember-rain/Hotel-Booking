@@ -1,0 +1,66 @@
+server:
+   port: 8088
+
+eureka:
+ instance:
+   prefer-ip-address: true
+   ip-address: ${HOST_IP_ADDRESS}
+ client:
+   fetch-registry: true
+   register-with-eureka: true
+   service-url:
+     defaultZone: http://discovery-service:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  logs:
+    level:
+      org.springframework.web: INFO
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+spring: 
+   application:
+      name: apigateway
+
+   cloud:
+      gateway:
+         routes:
+          - id: hotel-service
+            uri: lb://hotel-service
+            predicates:
+             - Path= /hotel/**
+
+          - id: booking-service
+            uri: lb://booking-service
+            predicates:
+             - Path= /booking/**
+
+          - id: profile-service
+            uri: lb://profile-service
+            predicates:
+              - Path= /profile/**
+
+          - id: history-service
+            uri: lb://history-service
+            predicates:
+              - Path= /history/**
+
+          - id: notification-service
+            uri: lb://notification-service
+            predicates:
+              - Path= /notification/**
+
+          
+       
+       
+   
+            
+
+             
+   

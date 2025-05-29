@@ -1,0 +1,184 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: "on-failure"
+
+  kafka-1:
+    image: confluentinc/cp-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    restart: "on-failure"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    command: start-dev
+    ports:
+      - "8180:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    restart: on-failure
+
+  #discovery service
+  discovery-service:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    env_file:
+      - .env.example
+    restart: on-failure
+
+  #   API Gateway
+  api-gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    env_file:
+      - .env.example
+    depends_on:
+      - discovery-service
+    restart: on-failure
+
+  monitor-admin:
+    build:
+      context: ./monitor-admin
+    ports:
+      - "8087:8087"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+    env_file:
+      - .env.example
+    restart: on-failure
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin-follow
+    ports:
+      - "9411:9411"
+    restart: on-failure
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3308:3306"
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+#  notification-service:
+#    build:
+#      context: ./services/NotificationService
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+#      SPRING_ZIPKIN_BASE-URL: http://zipkin:9411
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092
+#    env_file:
+#      - .env.example
+#    depends_on:
+#      - discovery-service
+#      - zipkin
+#      - kafka-1
+#    restart: on-failure
+#
+#  history-service:
+#    build:
+#      context: ./services/HistoryService
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8084:8084"
+#    environment:
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+#      SPRING_ZIPKIN_BASE-URL: http://zipkin:9411
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092
+#    env_file:
+#      - .env.example
+#    depends_on:
+#      - discovery-service
+#      - zipkin
+#      - kafka-1
+#    restart: on-failure
+#
+#  hotel-service:
+#    build:
+#      context: ./services/HotelService
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+#      SPRING_ZIPKIN_BASE-URL: http://zipkin:9411
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092
+#    env_file:
+#      - .env.example
+#    depends_on:
+#      - discovery-service
+#      - zipkin
+#      - kafka-1
+#    restart: on-failure
+#
+#  profile-service:
+#    build:
+#      context: ./services/ProfileService
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8085:8085"
+#    environment:
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+#      SPRING_ZIPKIN_BASE-URL: http://zipkin:9411
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092
+#    env_file:
+#      - .env.example
+#    depends_on:
+#      - discovery-service
+#      - zipkin
+#      - kafka-1
+#    restart: on-failure
+#
+#  booking-service:
+#    build:
+#      context: ./services/BookingService
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+#      SPRING_ZIPKIN_BASE-URL: http://zipkin:9411
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092
+#    env_file:
+#      - .env.example
+#    depends_on:
+#      - discovery-service
+#      - zipkin
+#      - kafka-1
+#    restart: on-failure
+
+volumes:
+  mysql-data:

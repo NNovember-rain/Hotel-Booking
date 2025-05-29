@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="com" />
+        <module name="com (2)" />
+        <module name="com (1)" />
+        <module name="com (8)" />
+        <module name="com (7)" />
+        <module name="com (9)" />
+        <module name="com (4)" />
+        <module name="com (3)" />
+        <module name="com (6)" />
+        <module name="com (5)" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="config-server" target="17" />
+      <module name="demo" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="com" options="-parameters" />
+      <module name="com (1)" options="-parameters" />
+      <module name="com (2)" options="-parameters" />
+      <module name="com (3)" options="-parameters" />
+      <module name="com (4)" options="-parameters" />
+      <module name="com (5)" options="-parameters" />
+      <module name="com (6)" options="-parameters" />
+      <module name="com (7)" options="-parameters" />
+      <module name="com (8)" options="-parameters" />
+      <module name="com (9)" options="-parameters" />
+      <module name="demo" options="-parameters" />
+    </option>
+  </component>
+</project>

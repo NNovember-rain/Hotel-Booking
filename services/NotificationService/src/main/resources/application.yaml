@@ -1,0 +1,67 @@
+server:
+  port: 8083
+  
+spring:               
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:mysql://localhost:3308/notification_service?createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/hotel
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: notification-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    password: fpna rnqz fbjr kgza
+    protocol: smtp
+    username: nguyenvietvan223@gmail.com
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+    test-connection: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  logs:
+    level:
+      org.springframework.web: INFO
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+      
+      

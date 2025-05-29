@@ -1,0 +1,43 @@
+server:
+  port: 8087
+
+spring:
+  application:
+      name: monitor-admin
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    password: fpna rnqz fbjr kgza
+    protocol: smtp
+    username: nguyenvietvan223@gmail.com
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+    test-connection: false
+
+  boot:
+    admin:
+      notify:
+        mail:
+          enabled: true
+          to: nguyenvietvan223@gmail.com
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: ${HOST_IP_ADDRESS}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+

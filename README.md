@@ -2,17 +2,6 @@
 
 Đây là một dự án xây dựng hệ thống đặt phòng khách sạn dựa trên kiến trúc microservices. Hệ thống cho phép người dùng tìm kiếm khách sạn, xem thông tin phòng, đặt phòng, nhận thông báo xác nhận, và quản lý lịch sử đặt phòng. Quản trị viên có thể quản lý khách sạn, phòng, đặt phòng và người dùng. Hệ thống được thiết kế để đảm bảo tính module hóa, khả năng mở rộng độc lập và dễ bảo trì, với các tương tác bất đồng bộ qua Apache Kafka và giám sát, theo dõi bằng Spring Boot Admin, Zipkin.
 
----
-## 👥 Thành viên Nhóm
-
-*Nhóm Môm học: 04*
-
-*Nhóm BTL: 21*
-
-| STT | Họ và Tên       | MSSV       |    
-|-----|-----------------|------------|
-| 1   | Nguyễn Viết Văn | B21DCCN785 |           
-| 2   | Hoàng Đình Hiệp | B21DCCN341 |
 ## 📁 Folder Structure
 
 ```
